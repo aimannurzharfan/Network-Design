@@ -6,7 +6,6 @@ This project encompasses the end-to-end design, simulation, and configuration of
 
 Designed to support high-density usage for general computing, embedded systems engineering, and specialized networking training, this infrastructure prioritizes scalability, fault tolerance, and security. The network is provisioned to handle a projected 15% growth in personnel and connected devices over the next five years.
 
-**Author:** Aiman Nurzharfan Bin Mohd Ali Yusni (A24CS0039)
 ---
 
 ## Project Phases and Documentation
