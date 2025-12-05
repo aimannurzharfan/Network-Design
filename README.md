@@ -40,7 +40,7 @@ Beyond the academic requirements, I expanded the project scope to implement ente
 
 A comprehensive walkthrough of the network simulation, including connectivity tests, packet flow analysis, and security verification, can be viewed here:
 
-* **YouTube Demo:** [Insert YouTube Link Here]
+* **YouTube Demo:** https://youtu.be/ewS-gqa3L7c
 * **Local File:** `demo.mp4` (Located in root directory)
 
 ---
