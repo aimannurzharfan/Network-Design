@@ -103,6 +103,6 @@ To examine the logical topology and routing configurations:
 1.  Ensure **Cisco Packet Tracer** (Latest Version recommended) is installed.
 2.  Clone this repository:
     ```bash
-    git clone [https://github.com/your-username/network-design-block-n28b.git](https://github.com/your-username/network-design-block-n28b.git)
+    git clone https://github.com/aimannurzharfan/Network-Design.git
     ```
 3.  Open `Design.pkt` in Packet Tracer.
