@@ -1,108 +1,67 @@
-# Enterprise Network Infrastructure Design: Faculty of Computing Expansion (Block N28B)
+# Campus Network Design: Block N28B, Faculty of Computing, UTM
 
-## Executive Summary
+The network design and Cisco Packet Tracer simulation for a new two-floor building at the Faculty of Computing, Universiti Teknologi Malaysia. It covers general-purpose labs, a Cisco networking lab, an embedded systems lab, a hybrid classroom and a video conference room, with room for 15% growth in users and devices over five years.
 
-This project encompasses the end-to-end design, simulation, and configuration of a robust network infrastructure for the new two-story expansion (Block N28B) at the Faculty of Computing, Universiti Teknologi Malaysia (UTM).
+[Watch the walkthrough on YouTube](https://youtu.be/ewS-gqa3L7c)
 
-Designed to support high-density usage for general computing, embedded systems engineering, and specialized networking training, this infrastructure prioritizes scalability, fault tolerance, and security. The network is provisioned to handle a projected 15% growth in personnel and connected devices over the next five years.
+## What's in this repo
 
----
+| File | Contents |
+| --- | --- |
+| `Network Design Report.pdf` | Course deliverable: requirements, floor plans, device placement, structured cabling (TIA/EIA), cost and procurement |
+| `Personal Project.pdf` | My extension beyond the course: OSPF, VLANs, extended ACLs and NAT/PAT on the same building |
+| `Design.pkt` | The Packet Tracer simulation |
+| `demo.mp4` | Local copy of the walkthrough video |
 
-## Project Phases and Documentation
+## What I added beyond the course
 
-This repository documents the project's evolution from initial feasibility planning to a fully functional, advanced network simulation.
+The course asked for the physical design. I took it further and built the logical network as it would run in production:
 
-### Phase 1: Planning and Physical Design (Academic Requirement)
-**File:** `Network Design Report.pdf`
+- **OSPF** for dynamic routing between the floor and lab routers
+- **VLANs** to separate students, staff and lab traffic into their own broadcast domains
+- **Extended ACLs** that restrict access to sensitive segments such as the video conference room
+- **NAT/PAT** on the edge router so private subnets can reach the internet
 
-This document represents the foundational scope required for the university curriculum. It details:
-* Feasibility studies and requirement analysis.
-* Physical floor plans and device placement strategies.
-* Structured cabling standards (Cable management and TIA/EIA compliance).
-* Cost analysis and hardware procurement planning.
+## Spaces covered
 
-### Phase 2: Advanced Implementation & Security Hardening (Personal Project)
-**File:** `Personal Project.pdf`
+**Floor 1:** two general-purpose labs (30 workstations each), a student lounge with high-density Wi-Fi, and a public waiting area on an isolated guest network.
 
-Beyond the academic requirements, I expanded the project scope to implement enterprise-level protocols, simulating a production environment. This phase focuses on logical topology optimization and security:
-* **Dynamic Routing (OSPF):** Implemented Open Shortest Path First for efficient load balancing and rapid network convergence.
-* **Network Segmentation (VLANs):** Configured Virtual LANs to isolate broadcast domains and separate user traffic (Student, Staff, Lab) for improved security and performance.
-* **Access Control (ACLs):** Applied Extended ACLs to enforce granular traffic filtering, restricting unauthorized access to critical segments such as the Video Conference infrastructure.
-* **Edge Connectivity (NAT/PAT):** Configured Network Address Translation on the edge router to facilitate secure internet connectivity for private internal subnets.
+**Floor 2:** a Cisco networking lab (30 workstations plus training racks), an embedded systems lab (30 workstations), a hybrid classroom with tracking cameras and smart boards, and a low-latency video conference room.
 
----
+## Topology
 
-## Video Demonstration
+A hierarchical star. The core connects to the UTM backbone, and each floor and lab has its own routing and switching for VLAN routing and fault isolation.
 
-A comprehensive walkthrough of the network simulation, including connectivity tests, packet flow analysis, and security verification, can be viewed here:
+| Role | Device | Why |
+| --- | --- | --- |
+| Main router | Cisco ISR 4431 | Up to 1 Gbps routing and NAT |
+| Lab router | Cisco ISR 4331 | Hands-on equipment for the Cisco lab |
+| Access switches | Ubiquiti UniFi Enterprise 48 PoE | Layer 3, 2.5GbE PoE+ for dense areas |
+| Lab switches | Cisco Catalyst 3750G | Stackable switches for the training racks |
+| Wireless | LigoWave NFT 2ac | Dual-band 802.11ac for lounges and labs |
+| Cabling | CAT6A shielded | 10 Gbps up to 100 m, less crosstalk |
 
-* **YouTube Demo:** https://youtu.be/ewS-gqa3L7c
-* **Local File:** `demo.mp4` (Located in root directory)
+## IP addressing (VLSM)
 
----
+Allocated from 172.18.0.0/20:
 
-## Infrastructure Scope
+| Location | Subnet | Usable hosts |
+| --- | --- | --- |
+| General Lab 1 | 172.18.0.0/24 | 172.18.0.1 to 172.18.0.254 |
+| General Lab 2 | 172.18.1.0/24 | 172.18.1.1 to 172.18.1.254 |
+| Student Lounge | 172.18.2.0/24 | 172.18.2.1 to 172.18.2.254 |
+| Embedded Lab | 172.18.3.0/24 | 172.18.3.1 to 172.18.3.254 |
+| Cisco Network Lab | 172.18.4.0/24 | 172.18.4.1 to 172.18.4.254 |
+| Hybrid Classroom | 172.18.5.0/24 | 172.18.5.1 to 172.18.5.254 |
+| Video Conference Room | 172.18.6.0/24 | 172.18.6.1 to 172.18.6.254 |
 
-The network design covers two floors containing specialized facilities with distinct traffic requirements:
+Router-to-router links use /30 subnets (for example 172.18.7.0/30).
 
-### Ground Floor (Floor 1)
-* **General Purpose Labs (x2):** 30 workstations per lab for programming and general study.
-* **Student Lounge:** High-density WiFi zone for casual access.
-* **Waiting Area:** Public access zone requiring guest isolation.
+## Open the simulation
 
-### Second Floor (Floor 2)
-* **Cisco Network Lab:** 30 workstations plus rack-mounted equipment for networking certification training.
-* **Embedded Lab:** 30 workstations equipped for IoT and electronics engineering traffic.
-* **Hybrid Classroom:** High-bandwidth requirement for auto-tracking cameras and smart boards.
-* **Video Conference Room:** Dedicated low-latency segment for remote meetings.
-
----
-
-## Technical Design & Topology
-
-### Logical Topology
-The network utilizes a **Hierarchical Star Topology** to ensure ease of management, fault isolation, and scalability.
-* **Core Layer:** Connected to the UTM Backbone.
-* **Distribution/Access Layers:** Dedicated routers and switches for each lab and floor segment to reduce collision domains and enable VLAN routing.
-
-### Hardware Specifications
-
-| Device Type | Model | Purpose |
-| :--- | :--- | :--- |
-| **Main Router** | Cisco ISR 4431 | High-throughput routing (up to 1Gbps) and NAT services. |
-| **Lab Router** | Cisco ISR 4331 | Hands-on training equipment in the Cisco Lab. |
-| **Switches** | Ubiquiti UniFi Enterprise 48 PoE | Layer 3 switching with 2.5GbE PoE+ support for high-density areas. |
-| **Lab Switches** | Cisco Catalyst 3750G | Stackable switches for the Cisco Lab training racks. |
-| **Wireless AP** | LigoWave NFT 2ac | Dual-band 802.11ac WiFi for coverage in lounges and labs. |
-| **Cabling** | CAT 6A Shielded | Supports 10Gbps speeds up to 100m; minimizes crosstalk. |
-
----
-
-## IP Addressing Scheme (VLSM)
-
-The network uses **IPv4** with **Variable Length Subnet Masking (VLSM)** to efficiently allocate addresses from the assigned block: **172.18.0.0/20**.
-
-| Location | Subnet ID | Usable Host Range |
-| :--- | :--- | :--- |
-| **General Lab 1** | 172.18.0.0/24 | 172.18.0.1 - 172.18.0.254 |
-| **General Lab 2** | 172.18.1.0/24 | 172.18.1.1 - 172.18.1.254 |
-| **Student Lounge** | 172.18.2.0/24 | 172.18.2.1 - 172.18.2.254 |
-| **Embedded Lab** | 172.18.3.0/24 | 172.18.3.1 - 172.18.3.254 |
-| **Cisco Network Lab** | 172.18.4.0/24 | 172.18.4.1 - 172.18.4.254 |
-| **Hybrid Classroom** | 172.18.5.0/24 | 172.18.5.1 - 172.18.5.254 |
-| **Video Conf. Room** | 172.18.6.0/24 | 172.18.6.1 - 172.18.6.254 |
-
-*Note: Inter-router links utilize /30 subnets (e.g., 172.18.7.0/30) to conserve address space and enhance security.*
-
----
-
-## Simulation Deployment
-
-To examine the logical topology and routing configurations:
-
-1.  Ensure **Cisco Packet Tracer** (Latest Version recommended) is installed.
-2.  Clone this repository:
-    ```bash
-    git clone https://github.com/aimannurzharfan/Network-Design.git
-    ```
-3.  Open `Design.pkt` in Packet Tracer.
+1. Install Cisco Packet Tracer (latest version).
+2. Clone the repo:
+   ```bash
+   git clone https://github.com/aimannurzharfan/Network-Design.git
+   ```
+3. Open `Design.pkt`.
